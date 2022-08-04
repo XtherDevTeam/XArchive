@@ -16,11 +16,11 @@ namespace XArchive {
     class ArchiveFormat {
         FILE* FilePointer;
 
-        void WriteFileInfo(const std::string &expect_dirpath, const std::filesystem::path &path);
+        void WriteFileInfo(const std::filesystem::path &expect_dirpath, const std::filesystem::path &path);
     public:
         static std::vector<std::filesystem::path> MakeIgnoreFileList(const std::filesystem::path &dir, const std::vector<std::filesystem::path> &ignore_files);
 
-        void CompressDirectory(const std::string &expect_dirpath, const std::filesystem::path &dir,
+        void CompressDirectory(const std::filesystem::path &expect_dirpath, const std::filesystem::path &dir,
                                const std::filesystem::path &output_filename, const std::vector<std::filesystem::path> &ignore_files);
 
         void DecompressToDirectory(const std::filesystem::path &file_path, const std::filesystem::path &dir);

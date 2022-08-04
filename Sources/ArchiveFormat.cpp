@@ -8,11 +8,11 @@
 
 namespace XArchive {
     void
-    ArchiveFormat::CompressDirectory(const std::string &expect_dirpath, const std::filesystem::path &dir,
+    ArchiveFormat::CompressDirectory(const std::filesystem::path &expect_dirpath, const std::filesystem::path &dir,
                                      const std::filesystem::path &output_filename,
                                      const std::vector<std::filesystem::path> &ignore_files) {
         if (!output_filename.empty())
-            FilePointer = fopen(output_filename.c_str(), "wb+");
+            FilePointer = fopen(output_filename.string().c_str(), "wb+");
         if (std::filesystem::is_directory(dir)) {
             for (auto &Item: std::filesystem::directory_iterator(dir)) {
                 if (std::find(ignore_files.begin(), ignore_files.end(), Item.path()) != ignore_files.end()) {
@@ -28,18 +28,18 @@ namespace XArchive {
                 }
             }
         } else {
-            throw IsNotDirectory(dir);
+            throw IsNotDirectory(dir.string());
         }
         if (!output_filename.empty())
             fclose(FilePointer);
     }
 
-    void ArchiveFormat::WriteFileInfo(const std::string &expect_dirpath, const std::filesystem::path &path) {
-        size_t dirpath_len = expect_dirpath.length();
+    void ArchiveFormat::WriteFileInfo(const std::filesystem::path &expect_dirpath, const std::filesystem::path &path) {
+        size_t dirpath_len = expect_dirpath.string().length();
         size_t filename_len = path.filename().string().length();
         size_t file_len = std::filesystem::file_size(path);
         fwrite(&dirpath_len, sizeof dirpath_len, 1, FilePointer);
-        fwrite(expect_dirpath.data(), dirpath_len, 1, FilePointer);
+        fwrite(expect_dirpath.string().data(), dirpath_len, 1, FilePointer);
         fwrite(&filename_len, sizeof filename_len, 1, FilePointer);
         fwrite(path.filename().string().data(), filename_len, 1, FilePointer);
         fwrite(&file_len, sizeof file_len, 1, FilePointer);
@@ -88,7 +88,7 @@ namespace XArchive {
                 fclose(fp);
             }
         } else {
-            throw IsNotDirectory(dir);
+            throw IsNotDirectory(dir.string());
         }
         fclose(FilePointer);
     }
