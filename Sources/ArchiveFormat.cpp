@@ -72,7 +72,6 @@ namespace XArchive {
 
                 std::filesystem::create_directories(dir / expect_dir);
                 std::filesystem::path path = dir / expect_dir / filename;
-                std::cout << "Path: " << path.string() << " \n" << std::endl;
                 FILE *fp = fopen(path.string().c_str(), "wb");
 
                 std::string buffer(1048576, '\0');
