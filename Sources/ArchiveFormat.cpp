@@ -9,14 +9,18 @@
 namespace XArchive {
     void
     ArchiveFormat::CompressDirectory(const std::string &expect_dirpath, const std::filesystem::path &dir,
-                                     const std::filesystem::path &output_filename) {
+                                     const std::filesystem::path &output_filename,
+                                     const std::vector<std::filesystem::path> &ignore_files) {
         if (!output_filename.empty())
             FilePointer = fopen(output_filename.c_str(), "wb+");
         if (std::filesystem::is_directory(dir)) {
             for (auto &Item: std::filesystem::directory_iterator(dir)) {
+                if (std::find(ignore_files.begin(), ignore_files.end(), Item.path()) != ignore_files.end()) {
+                    continue;
+                }
                 if (Item.is_directory()) {
                     CompressDirectory(expect_dirpath / Item.path().filename(),
-                                      Item.path(), "");
+                                      Item.path(), "", ignore_files);
                 } else {
                     if (Item.path() == output_filename or Item.path() == "." / output_filename)
                         continue;
@@ -87,5 +91,14 @@ namespace XArchive {
             throw IsNotDirectory(dir);
         }
         fclose(FilePointer);
+    }
+
+    std::vector<std::filesystem::path> ArchiveFormat::MakeIgnoreFileList(const std::filesystem::path &dir,
+                                                                         const std::vector<std::filesystem::path> &ignore_files) {
+        std::vector<std::filesystem::path> Ret;
+        for (auto &I: ignore_files) {
+            Ret.push_back(dir / I);
+        }
+        return Ret;
     }
 } // XArchive
