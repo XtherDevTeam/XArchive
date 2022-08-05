@@ -24,3 +24,9 @@ file(GLOB XARCHIVE_SRC_FILES
 
 add_executable(YourTarget blahblah ${XARCHIVE_SRC_FILES})
 ```
+
+CLI Usage:
+```
+xar pack dirpath=path/to/dir out=path/to/xar_filepath
+xar unpack in=path/to/xar out=path/to/dir
+```
