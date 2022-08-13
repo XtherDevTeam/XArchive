@@ -35,9 +35,9 @@ namespace XArchive {
     }
 
     void ArchiveFormat::WriteFileInfo(const std::filesystem::path &expect_dirpath, const std::filesystem::path &path) {
-        size_t dirpath_len = expect_dirpath.string().length();
-        size_t filename_len = path.filename().string().length();
-        size_t file_len = std::filesystem::file_size(path);
+        uint64_t dirpath_len = expect_dirpath.string().length();
+        uint64_t filename_len = path.filename().string().length();
+        uint64_t file_len = std::filesystem::file_size(path);
         fwrite(&dirpath_len, sizeof dirpath_len, 1, FilePointer);
         fwrite(expect_dirpath.string().data(), dirpath_len, 1, FilePointer);
         fwrite(&filename_len, sizeof filename_len, 1, FilePointer);
@@ -47,7 +47,7 @@ namespace XArchive {
         FILE *fp = fopen(path.string().c_str(), "rb");
         std::string buffer(1048576, '\0');
         while (!feof(fp)) {
-            size_t len = fread(buffer.data(), 1, buffer.size(), fp);
+            uint64_t len = fread(buffer.data(), 1, buffer.size(), fp);
             fwrite(buffer.data(), len, 1, FilePointer);
         }
         fclose(fp);
@@ -58,7 +58,7 @@ namespace XArchive {
         FilePointer = fopen(file_path.string().c_str(), "rb");
         if (std::filesystem::is_directory(dir)) {
             while (!feof(FilePointer)) {
-                size_t tempVal;
+                uint64_t tempVal;
                 std::string expect_dir;
                 fread(&tempVal, sizeof tempVal, 1, FilePointer);
                 expect_dir.resize(tempVal);
@@ -80,8 +80,8 @@ namespace XArchive {
 
                 std::string buffer(1048576, '\0');
                 while (tempVal) {
-                    size_t read_size = 1048576 > tempVal ? tempVal : 1048576;
-                    size_t size = fread(buffer.data(), 1, read_size, FilePointer);
+                    uint64_t read_size = 1048576 > tempVal ? tempVal : 1048576;
+                    uint64_t size = fread(buffer.data(), 1, read_size, FilePointer);
                     fwrite(buffer.data(), size, 1, fp);
                     tempVal -= read_size;
                 }

@@ -9,7 +9,7 @@ void ParseArguments(int argc, const char **argv) {
     Arguments["PATH"] = (std::string) {".;"};
     for (int i = 1; i < argc; i++) {
         std::string Str = argv[i];
-        size_t Equ = Str.find('=');
+        uint64_t Equ = Str.find('=');
         if (Equ != std::string::npos) {
             std::string L = Str.substr(0, Equ);
             std::string R = Str.substr(Equ + 1);
@@ -31,7 +31,6 @@ void ParseArguments(int argc, const char **argv) {
 int main(int argc, const char **argv) {
     ParseArguments(argc, argv);
     XArchive::ArchiveFormat Format;
-
     if (Arguments.count("pack")) {
         Format.CompressDirectory((std::filesystem::path) {""}, (std::filesystem::path) {Arguments["dir"]},
                                  (std::filesystem::path) {Arguments["out"]}, {});

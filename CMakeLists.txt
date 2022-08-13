@@ -8,3 +8,4 @@ file(GLOB SRC_FILES
         Sources/*.cpp)
 
 add_executable(XArchive main.cpp ${SRC_FILES})
+set(CMAKE_EXE_LINKER_FLAGS "--static -lpthread")
